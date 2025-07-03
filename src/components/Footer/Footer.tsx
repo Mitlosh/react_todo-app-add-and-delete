@@ -50,7 +50,7 @@ export const Footer: React.FC<Props> = ({
           Completed
         </a>
       </nav>
-      ``
+
       <button
         type="button"
         className="todoapp__clear-completed"

@@ -31,15 +31,6 @@ export const Error: React.FC<Props> = ({ errorMessage, onClose }) => {
     >
       <button data-cy="HideErrorButton" type="button" className="delete" />
       {errorMessage}
-      {/* Unable to load todos
-      <br />
-      Title should not be empty
-      <br />
-      Unable to add a todo
-      <br />
-      Unable to delete a todo
-      <br />
-      Unable to update a todo */}
     </div>
   );
 };

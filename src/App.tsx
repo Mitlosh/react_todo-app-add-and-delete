@@ -116,22 +116,37 @@ export const App: React.FC = () => {
       .filter(todo => todo.completed)
       .map(todo => todo.id);
 
-    try {
-      setDeletingTodoIds(current => [...current, ...completedIds]);
-
-      await Promise.all(completedIds.map(id => deleteTodo(id)));
-      setTodos(current => current.filter(todo => !todo.completed));
-    } catch {
-      setErrorMessage(
-        'Failed to delete some completed todos. ' + 'Please try again.',
-      );
-      setTimeout(() => setErrorMessage(null), 3000);
-    } finally {
-      setDeletingTodoIds(current =>
-        current.filter(id => !completedIds.includes(id)),
-      );
-      inputRef.current?.focus();
+    if (completedIds.length === 0) {
+      return;
     }
+
+    setDeletingTodoIds(current => [...current, ...completedIds]);
+
+    const results = await Promise.allSettled(
+      completedIds.map(id => deleteTodo(id)),
+    );
+
+    const successfulIds = completedIds.filter(
+      (_, i) => results[i].status === 'fulfilled',
+    );
+
+    const failedIds = completedIds.filter(
+      (_, i) => results[i].status === 'rejected',
+    );
+
+    if (failedIds.length > 0) {
+      setErrorMessage('Unable to delete a todo');
+    }
+
+    setTodos(current =>
+      current.filter(todo => !successfulIds.includes(todo.id)),
+    );
+
+    setDeletingTodoIds(current =>
+      current.filter(id => !completedIds.includes(id)),
+    );
+
+    inputRef.current?.focus();
   };
 
   useEffect(() => {
