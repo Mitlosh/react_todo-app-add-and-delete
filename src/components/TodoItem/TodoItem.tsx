@@ -15,33 +15,35 @@ export const TodoItem: React.FC<Props> = ({
   deleteTodo,
   loading,
 }) => {
+  const { id, title, completed } = todo;
+
   return (
     <div
-      key={todo.id}
+      key={id}
       data-cy="Todo"
-      className={cn('todo', { completed: todo.completed })}
+      className={cn('todo', { completed: completed })}
     >
-      <label htmlFor={`${todo.id}`} className="todo__status-label">
+      <label htmlFor={`${id}`} className="todo__status-label">
         {}
         <input
-          id={`${todo.id}`}
+          id={`${id}`}
           data-cy="TodoStatus"
           type="checkbox"
           className="todo__status"
-          checked={todo.completed}
+          checked={completed}
           onChange={() => toggleTodo(todo)}
         />
       </label>
 
       <span data-cy="TodoTitle" className="todo__title">
-        {todo.title}
+        {title}
       </span>
 
       <button
         type="button"
         className="todo__remove"
         data-cy="TodoDelete"
-        onClick={() => deleteTodo(todo.id)}
+        onClick={() => deleteTodo(id)}
       >
         ×
       </button>

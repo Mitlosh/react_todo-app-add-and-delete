@@ -13,13 +13,13 @@ import { Todo } from './types/Todo';
 import { TodoList } from './components/TodoList';
 import { Error } from './components/Error';
 import { Footer } from './components/Footer';
+import { StatusFilter } from './types/TodosStatus';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  // const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
-  const [status, setStatus] = useState<'all' | 'active' | 'completed'>('all');
+  const [status, setStatus] = useState<StatusFilter>(StatusFilter.All);
   const [query, setQuery] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
@@ -28,14 +28,12 @@ export const App: React.FC = () => {
 
   const fetchTodos = async () => {
     try {
-      // setLoading(true);
       const data = await getTodos();
 
       setTodos(data);
     } catch {
       setErrorMessage('Unable to load todos');
     } finally {
-      // setLoading(false);
     }
   };
 
@@ -152,10 +150,11 @@ export const App: React.FC = () => {
   useEffect(() => {
     const filtered = todos.filter(todo => {
       switch (status) {
-        case 'active':
+        case StatusFilter.Active:
           return !todo.completed;
-        case 'completed':
+        case StatusFilter.Completed:
           return todo.completed;
+        case StatusFilter.All:
         default:
           return todo;
       }
